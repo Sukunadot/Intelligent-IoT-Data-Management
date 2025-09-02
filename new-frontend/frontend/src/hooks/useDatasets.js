@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { datasets as seed } from "../data/datasets";
 
 export default function useDatasets() {
   const [datasets, setDatasets] = useState([]);
@@ -7,19 +8,22 @@ export default function useDatasets() {
 
   useEffect(() => {
     let cancelled = false;
+
     (async () => {
       try {
-        // Replace with your real endpoint
-        const res = await fetch("/api/datasets");
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        if (!cancelled) setDatasets(Array.isArray(data) ? data : []);
+        // Try real API here later; for now just use seed
+        await new Promise(r => setTimeout(r, 120)); // optional tiny delay for skeleton
+        if (!cancelled) {
+          setDatasets(seed);
+          setError(null);
+        }
       } catch (e) {
         if (!cancelled) setError(e);
       } finally {
         if (!cancelled) setLoading(false);
       }
     })();
+
     return () => { cancelled = true; };
   }, []);
 
